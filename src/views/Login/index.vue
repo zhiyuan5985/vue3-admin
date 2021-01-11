@@ -26,7 +26,7 @@
           <label for="">验证码</label>
           <el-row :gutter="11">
             <el-col :span="15"><el-input v-model.number="ruleForm.code"></el-input></el-col>
-            <el-col :span="9"><el-button type="success" class="btn-block">获取验证码</el-button></el-col>
+            <el-col :span="9"><el-button type="success" class="btn-block" @click="getCode()">获取验证码</el-button></el-col>
           </el-row>
         </el-form-item>
         <el-form-item>
@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { getSms } from '@/api/login.js';
 import { reactive, ref, isRef, toRefs, onMounted, watch, onUnmounted } from '@vue/composition-api';
 import { stripscript, validateEmail, validatePass, validateCode } from '@/utils/validate';
 export default {
@@ -102,8 +103,8 @@ export default {
     const model = ref('login');
     // 表单绑定数据    
     const ruleForm =  reactive({
-      username: '410293095@qq.com',
-      password: 'wo123456789',
+      username: '',
+      password: '',
       passwordRepeat: '',
       code: ''
     });
@@ -127,11 +128,25 @@ export default {
     /* *************************************************
     *  声明函数
     */
+    /**
+     * 切换登录注册
+     */
     const toggleMenu = (item) => {
       menuTab.forEach(x => x.current = false);
       item.current = true;
       model.value = item.model;
     };
+    /**
+     * 获取验证码
+     */
+    const getCode = () => {
+      getSms({
+        username: ruleForm.username
+      });
+    }
+    /**
+     * 提交表单
+     */
     const submitForm = (formName) => {
       refs[formName].validate((valid) => {
         if (valid) {
@@ -148,6 +163,7 @@ export default {
       ruleForm,
       rules,
       toggleMenu,
+      getCode,
       submitForm
     }
   },
