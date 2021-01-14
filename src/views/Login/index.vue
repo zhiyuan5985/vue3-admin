@@ -25,7 +25,7 @@
         <el-form-item prop="code" class="form-item">
           <label for="code">验证码</label>
           <el-row :gutter="11">
-            <el-col :span="15"><el-input id="code" v-model.number="ruleForm.code"></el-input></el-col>
+            <el-col :span="15"><el-input id="code" v-model="ruleForm.code"></el-input></el-col>
             <el-col :span="9">
               <el-button type="success" 
               class="btn-block" 
@@ -37,7 +37,10 @@
           </el-row>
         </el-form-item>
         <el-form-item>
-          <el-button type="danger" class="btn-block login-btn" @click="submitForm('ruleForm')" :disabled = "loginButtonState">
+          <el-button type="danger" 
+          class="btn-block login-btn" 
+          @click="model === 'register' ? register() : login()" 
+          :disabled = "loginButtonState">
             {{ model === 'register' ? "注册" : "登录" }}
           </el-button>
         </el-form-item>
@@ -48,9 +51,10 @@
 </template>
 
 <script>
-import { getSms } from '@/api/login.js';
+import sha1 from 'js-sha1';             // 加密
+import { getSmsApi, loginApi, registerApi } from '@/api/login.js';  // 获取验证码,登陆注册表单提交
 import { reactive, ref, isRef, toRefs, onMounted, watch, onUnmounted } from '@vue/composition-api';
-import { stripscript, validateEmail, validatePass, validateCode } from '@/utils/validate';
+import { stripscript, validateEmail, validatePass, validateCode } from '@/utils/validate';  // 验证输入框
 export default {
   name: 'Login',
   setup(props, { refs, root }) {
@@ -94,8 +98,8 @@ export default {
     };
     // 验证验证码
     var checkCode = (rule, value, callback) => {
-      ruleForm.code = stripscript(value);
-      value = ruleForm.code;                                
+      // ruleForm.code = stripscript(value);
+      // value = ruleForm.code;                                
       if (value === '') {
         callback(new Error('请输入验证码'));
       } else if (! validateCode(value)) {
@@ -156,6 +160,8 @@ export default {
       model.value = item.model;
       // 清掉表单内容
       refs.loginForm.resetFields();
+      // 恢复获取验证码
+      clearCountDown();
     };
     /**
      * 获取验证码
@@ -166,16 +172,19 @@ export default {
         return false;
       }
       // 给接口传送的数据
-      let requestData = {
+      let requestData = model === 'login'? 
+      {
         username: ruleForm.username,
-        module: model.value
-      };
+      } : {
+        username: ruleForm.username,
+        module: 'register'
+      }
       // 把获取验证码按钮给禁用掉，显示发送中
       codeButton.state = true;
       codeButton.text = '发送中';
       // 过2s后再发送请求并接收响应
       setTimeout(() => {
-        getSms(requestData).then(response => {
+        getSmsApi(requestData).then(response => {
           let data = response.data;
           // 成功返回的话提示一下
           root.$message({
@@ -191,17 +200,42 @@ export default {
       }, 2000);
     }
     /**
-     * 提交表单
+     * 提交登录表单
      */
-    const submitForm = (formName) => {
-      refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!');
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
+    const login = () => {
+      let requestData = {
+        username: ruleForm.username,
+        password: sha1(ruleForm.password),
+        code: ruleForm.code
+      }
+      loginApi(requestData).then(res => {
+        let data = res.data;
+        root.$message({
+          message: data.message,
+          type: 'success'
+        })
+      }).catch(err => {
+        console.log(err);
+      })
+    };
+    /**
+     * 提交注册表单
+     */
+    const register = () => {
+      let data = res.data;
+      let requestData = {
+        username: ruleForm.username,
+        password: sha1(ruleForm.password),
+        code: ruleForm.code
+      }
+      registerApi(requestData).then(res => {
+        root.$message({
+          message: data.message,
+          type: 'success'
+        })
+      }).catch(err => {
+        console.log(err);
+      })
     };
     /**
      * 倒计时
@@ -220,7 +254,14 @@ export default {
         }
       }, 1000)
     }
-
+    /**
+     * 清除倒计时，恢复默认状态
+     */
+    const clearCountDown = () => {
+      clearInterval(timer.value);
+      codeButton.state = false;
+      codeButton.text = '获取验证码';
+    }
     return {
       menuTab,
       model,
@@ -230,7 +271,8 @@ export default {
       rules,
       toggleMenu,
       getCode,
-      submitForm
+      register,
+      login
     }
   },
 
