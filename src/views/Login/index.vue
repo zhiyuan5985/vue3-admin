@@ -214,6 +214,9 @@ export default {
           message: data.message,
           type: 'success'
         })
+        root.$router.push({
+          name: 'Console',
+        })
       }).catch(err => {
         console.log(err);
       })
