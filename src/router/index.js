@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/views/Login/index'
 import Console from '@/views/Console/index'
+import Layout from '@/views/Layout/index'
 
 Vue.use(VueRouter)
 
@@ -20,8 +21,7 @@ const routes = [{
         meta: {
             name: "登录",
         },
-        component: () =>
-            import ("../views/Login/index.vue")
+        component: Login
     },
     /**
      * 控制台
@@ -30,19 +30,18 @@ const routes = [{
         path: '/console',
         name: 'Console',
         meta: {
-            name: "控制台"
+            name: "控制台",
+            icon: 'yibiao'
         },
         redirect: 'index',
-        component: () =>
-            import ("../views/Layout/index.vue"),
+        component: Layout,
         children: [{
             path: "/index",
             name: "Index",
             meta: {
                 name: '首页'
             },
-            component: () =>
-                import ("../views/Console/index.vue"),
+            component: Console
         }]
     },
     /**
@@ -52,10 +51,10 @@ const routes = [{
         path: '/info',
         name: 'Info',
         meta: {
-            name: "信息管理"
+            name: "信息管理",
+            icon: 'info'
         },
-        component: () =>
-            import ("../views/Layout/index.vue"),
+        component: Layout,
         children: [{
             path: "/infoIndex",
             name: "infoIndex",
@@ -81,10 +80,10 @@ const routes = [{
         path: '/user',
         name: 'User',
         meta: {
-            name: "用户管理"
+            name: "用户管理",
+            icon: 'user'
         },
-        component: () =>
-            import ("../views/Layout/index.vue"),
+        component: Layout,
         children: [{
             path: "/userIndex",
             name: "UserIndex",

@@ -13,8 +13,8 @@
       <template v-for="(item, i) in routers">
         <el-submenu  v-if="! item.hidden" :key="item.id" :index="i.toString()">
         <!-- 一级菜单 -->
-          <template slot="title">
-            <i class="el-icon-location"></i>
+          <template slot="title"> 
+            <svg-icons :iconClass="item.meta.icon + ' font22' + ' nav'" :iconName="item.meta.icon"/>
             <span>{{ item.meta.name }}</span>
           </template>
           <!-- 子级菜单 -->
@@ -31,7 +31,9 @@
 
 <script>
 import { reactive, ref, isRef, toRefs, onMounted, watch, onUnmounted } from '@vue/composition-api';
+import svgIcons from '../../../icons/svgIcons.vue';
 export default {
+  components: { svgIcons },
   name: 'NavMenu',
   setup(props, {root}) {
     /**
@@ -66,6 +68,10 @@ export default {
   background-color: #344a5f;
   text-align: left;
   font-size: 14px;
+  svg {
+    font-size: 20px;
+    margin-right: 10px;
+  }
 }
 
 </style>
