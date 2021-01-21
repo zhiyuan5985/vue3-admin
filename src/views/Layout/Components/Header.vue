@@ -1,7 +1,7 @@
 <template>
   <div id="header-wrap">
     <div class="pull-left">
-      <div class="header-icons">
+      <div class="header-icons" @click="navMenuState">
         <svg-icons iconClass="menu font22" iconName="menu"/>
       </div>
     </div>
@@ -19,7 +19,18 @@
 
 <script>
 export default {
-  name: 'Console'
+  name: 'Console',
+  setup(props, { root }) {
+    /**
+     * 函数
+     */
+    const navMenuState = () => {
+      root.$store.commit('SET_ISCOLLAPSE');
+    };
+    return {
+      navMenuState
+    }
+  }
 }
 </script>
 
@@ -51,6 +62,17 @@ export default {
   .user-info {
     border-right: 1px solid #ededed;
     padding: 0 30px;
+  }
+  @include webkit(transition, all .3s ease 0s);
+}
+.open {
+  #header-wrap {
+    left: $navMenu;
+  }
+}
+.close {
+  #header-wrap {
+    left: $navMenuMin;
   }
 }
 </style>

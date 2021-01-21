@@ -6,6 +6,7 @@
       class="el-menu-vertical-demo"
       @open="handleOpen"
       @close="handleClose"
+      :collapse="isCollapse"
       background-color="#344a5f"
       text-color="#fff"
       active-text-color="#fff"
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import { reactive, ref, isRef, toRefs, onMounted, watch, onUnmounted } from '@vue/composition-api';
+import { reactive, ref, isRef, toRefs, onMounted, watch, onUnmounted, computed } from '@vue/composition-api';
 import svgIcons from '../../../icons/svgIcons.vue';
 export default {
   components: { svgIcons },
@@ -40,6 +41,7 @@ export default {
      * data数据
      */
     const routers = reactive(root.$router.options.routes);
+    const isCollapse = computed(() => root.$store.state.isCollapse);
      /***********************************
       * 方法函数
       */
@@ -52,7 +54,8 @@ export default {
     return {
       routers,
       handleOpen,
-      handleClose
+      handleClose,
+      isCollapse
     }
   }
 }
@@ -68,9 +71,20 @@ export default {
   background-color: #344a5f;
   text-align: left;
   font-size: 14px;
+  @include webkit(transition, all .3s ease 0s);
   svg {
     font-size: 20px;
     margin-right: 10px;
+  }
+}
+.open {
+  #nav-wrap {
+    width: $navMenu;
+  }
+}
+.close {
+  #nav-wrap {
+    width: $navMenuMin;
   }
 }
 

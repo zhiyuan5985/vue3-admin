@@ -21,5 +21,16 @@ export default {
   border: 30px solid #f7f7f7;
   border-right: none;
   border-bottom: none;
+  @include webkit(transition, all .3s ease 0s);
+}
+.open {
+  #main-wrap {
+    left: $navMenu;
+  }
+}
+.close {
+  #main-wrap {
+    left: $navMenuMin;
+  }
 }
 </style>
