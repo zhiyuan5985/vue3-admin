@@ -41,7 +41,7 @@ export default {
      * data数据
      */
     const routers = reactive(root.$router.options.routes);
-    const isCollapse = computed(() => root.$store.state.isCollapse);
+    const isCollapse = computed(() => root.$store.state.app.isCollapse);
      /***********************************
       * 方法函数
       */

@@ -208,7 +208,7 @@ export default {
         password: sha1(ruleForm.password),
         code: ruleForm.code
       }
-      loginApi(requestData).then(res => {
+      root.$store.dispatch('login', requestData).then(res => {
         let data = res.data;
         root.$message({
           message: data.message,
@@ -219,7 +219,19 @@ export default {
         })
       }).catch(err => {
         console.log(err);
-      })
+      });
+      // loginApi(requestData).then(res => {
+      //   let data = res.data;
+      //   root.$message({
+      //     message: data.message,
+      //     type: 'success'
+      //   })
+      //   root.$router.push({
+      //     name: 'Console',
+      //   })
+      // }).catch(err => {
+      //   console.log(err);
+      // })
     };
     /**
      * 提交注册表单

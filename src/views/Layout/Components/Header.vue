@@ -25,7 +25,7 @@ export default {
      * 函数
      */
     const navMenuState = () => {
-      root.$store.commit('SET_ISCOLLAPSE');
+      root.$store.commit('app/SET_ISCOLLAPSE');
     };
     return {
       navMenuState
