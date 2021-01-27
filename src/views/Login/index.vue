@@ -208,7 +208,7 @@ export default {
         password: sha1(ruleForm.password),
         code: ruleForm.code
       }
-      root.$store.dispatch('login', requestData).then(res => {
+      root.$store.dispatch('app/login', requestData).then(res => {
         let data = res.data;
         root.$message({
           message: data.message,

@@ -1,105 +1,110 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Login from '@/views/Login/index'
-import Console from '@/views/Console/index'
-import Layout from '@/views/Layout/index'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Login from '@/views/Login/index';
+import Console from '@/views/Console/index';
+import Layout from '@/views/Layout/index';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
-const routes = [{
-        path: '/',
-        meta: {
-            name: "主页",
-        },
-        hidden: true,
-        redirect: '/login'
+const routes = [
+  {
+    path: '/',
+    meta: {
+      name: '主页',
     },
-    {
-        path: '/login',
-        name: 'Login',
-        hidden: true,
-        meta: {
-            name: "登录",
-        },
-        component: Login
+    hidden: true,
+    redirect: '/login',
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    hidden: true,
+    meta: {
+      name: '登录',
     },
-    /**
-     * 控制台
-     */
-    {
-        path: '/console',
-        name: 'Console',
-        meta: {
-            name: "控制台",
-            icon: 'yibiao'
-        },
-        redirect: 'index',
-        component: Layout,
-        children: [{
-            path: "/index",
-            name: "Index",
-            meta: {
-                name: '首页'
-            },
-            component: Console
-        }]
+    component: Login,
+  },
+  /**
+   * 控制台
+   */
+  {
+    path: '/console',
+    name: 'Console',
+    meta: {
+      name: '控制台',
+      icon: 'yibiao',
     },
-    /**
-     * 信息管理
-     */
-    {
-        path: '/info',
-        name: 'Info',
+    redirect: 'index',
+    component: Layout,
+    children: [
+      {
+        path: '/index',
+        name: 'Index',
         meta: {
-            name: "信息管理",
-            icon: 'info'
+          name: '首页',
         },
-        component: Layout,
-        children: [{
-            path: "/infoIndex",
-            name: "infoIndex",
-            meta: {
-                name: '信息列表'
-            },
-            component: () =>
-                import ("../views/Info/index.vue"),
-        }, {
-            path: "/infoCategory",
-            name: "infoCategory",
-            meta: {
-                name: '信息分类'
-            },
-            component: () =>
-                import ("../views/Info/Category.vue"),
-        }]
+        component: Console,
+      },
+    ],
+  },
+  /**
+   * 信息管理
+   */
+  {
+    path: '/info',
+    name: 'Info',
+    meta: {
+      name: '信息管理',
+      icon: 'info',
     },
-    /**
-     * 用户管理
-     */
-    {
-        path: '/user',
-        name: 'User',
+    component: Layout,
+    children: [
+      {
+        path: '/infoIndex',
+        name: 'infoIndex',
         meta: {
-            name: "用户管理",
-            icon: 'user'
+          name: '信息列表',
         },
-        component: Layout,
-        children: [{
-            path: "/userIndex",
-            name: "UserIndex",
-            meta: {
-                name: '用户列表'
-            },
-            component: () =>
-                import ("../views/User/index.vue"),
-        }]
+        component: () => import('../views/Info/index.vue'),
+      },
+      {
+        path: '/infoCategory',
+        name: 'infoCategory',
+        meta: {
+          name: '信息分类',
+        },
+        component: () => import('../views/Info/Category.vue'),
+      },
+    ],
+  },
+  /**
+   * 用户管理
+   */
+  {
+    path: '/user',
+    name: 'User',
+    meta: {
+      name: '用户管理',
+      icon: 'user',
     },
-]
+    component: Layout,
+    children: [
+      {
+        path: '/userIndex',
+        name: 'UserIndex',
+        meta: {
+          name: '用户列表',
+        },
+        component: () => import('../views/User/index.vue'),
+      },
+    ],
+  },
+];
 
 const router = new VueRouter({
-    mode: 'history',
-    base: process.env.BASE_URL,
-    routes
-})
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes,
+});
 
-export default router
+export default router;

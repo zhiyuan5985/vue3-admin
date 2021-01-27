@@ -8,9 +8,9 @@
     <div class="pull-right">
       <div class="photo pull-left"></div>
       <div class="user-info pull-left">
-        管理员
+        {{ username }}
       </div>
-      <div class="header-icons pull-left">
+      <div class="header-icons pull-left" @click="exit">
         <svg-icons iconClass="power font20" iconName="power"/>
       </div> 
     </div>
@@ -18,17 +18,26 @@
 </template>
 
 <script>
+import { computed } from '@vue/composition-api';
 export default {
   name: 'Console',
   setup(props, { root }) {
     /**
      * 函数
      */
+    const username = computed(() => root.$store.state.app.username);
     const navMenuState = () => {
       root.$store.commit('app/SET_ISCOLLAPSE');
     };
+    const exit = () => {
+      root.$store.dispatch('app/exit').then(() => {
+        root.$router.push('/login');
+      });
+    };
     return {
-      navMenuState
+      navMenuState,
+      username,
+      exit
     }
   }
 }
