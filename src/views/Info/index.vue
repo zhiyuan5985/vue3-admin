@@ -114,21 +114,34 @@
         </el-pagination>
       </el-col>
     </el-row>
-    <!-- 添加按钮 -->
-    <div class="add-button pull-right">
+    <!-- 底部分页  end -->
+
+    <!-- 新增按钮 -->
+    <div class="add-button pull-right" @click="dialogOpen">
        <svg-icons iconClass="add font22" iconName="add"/>
     </div>
+    <!-- 新增弹窗 -->
+    <dialog-info :flag="dialogVisible" @closeDialog="dialogVisible = false"/>
   </div>
 </template>
 <script>
-import svgIcons from '@/icons/svgIcons.vue';
+import DialogInfo from './dialog/index' 
 import { reactive, ref, isRef, toRefs, onMounted, computed } from '@vue/composition-api';
 export default {
   name:"infoIndex",
+  components: {
+    DialogInfo
+  },
   setup(props) {
     /**
      * 数据
      */
+    const typeSelect = ref('');           // 类型选中
+    const keywordSelect = ref('id');      // 关键词选中       
+    const dateValue = ref('');            // 日期选中值
+    const keywordInput = ref('');         // 关键词输入框输入值
+    const dialogVisible = ref(false);      // 弹窗是否可见
+    // 类型选项
     const typeOptions = reactive([{
       value: 1,
       label: '国际信息'
@@ -139,6 +152,7 @@ export default {
       value: 3,
       label: '行业信息'
     }]);
+    // 关键词选项
     const keywordOptions = reactive([{
       value: 'id',
       label: 'ID'
@@ -146,10 +160,7 @@ export default {
       value: 'title',
       label: '标题'
     }]);
-    const typeSelect = ref('');
-    const keywordSelect = ref('id');
-    const dateValue = ref('');
-    const keywordInput = ref('');
+     // 表格数据
     const tableData =  reactive([{
       title: '纽约市长白思豪宣布退出总统竞选',
       category: '国内信息',
@@ -160,7 +171,7 @@ export default {
       category: '国内信息',
       admin: '李四',
       date: '2019-09-10 19:31:31'
-    }])
+    }]);
     /***********************************
      * 方法
      */
@@ -170,16 +181,24 @@ export default {
     const handleCurrentChange = (val) => {
       console.log(`当前页: ${val}`);
     };
+    const dialogOpen = () => { 
+      dialogVisible.value = true;
+    }
+    /************************************
+     * 返回
+     */
     return {
       typeOptions,
       keywordOptions,
       typeSelect,
       keywordSelect,
       dateValue,
+      dialogVisible,
       keywordInput,
       tableData,
       handleSizeChange,
-      handleCurrentChange
+      handleCurrentChange,
+      dialogOpen
     }
   }
 }
