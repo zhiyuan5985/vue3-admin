@@ -22,6 +22,9 @@ export default {
   border-right: none;
   border-bottom: none;
   @include webkit(transition, all .3s ease 0s);
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
 }
 .open {
   #main-wrap {

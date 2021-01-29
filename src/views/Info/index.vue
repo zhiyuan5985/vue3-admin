@@ -26,7 +26,7 @@
           <div class="content">
             <el-date-picker
               v-model="dateValue"
-              type="datetimerange"
+              type="daterange"
               align="right"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
@@ -87,7 +87,7 @@
           <el-button
             size="mini"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            @click="handleDelete()">删除</el-button>
           <el-button
             size="mini"
             type="success"
@@ -100,7 +100,7 @@
     <!-- 底部分页  start -->
     <el-row>
       <el-col :span="12">
-        <el-button type="medium" class="pull-left">批量删除</el-button>
+        <el-button type="medium" class="pull-left" @click="handleDeleteSelect">批量删除</el-button>
       </el-col>
       <el-col :span="12">
         <el-pagination
@@ -132,7 +132,7 @@ export default {
   components: {
     DialogInfo
   },
-  setup(props) {
+  setup(props, {root}) {
     /**
      * 数据
      */
@@ -184,49 +184,44 @@ export default {
     const dialogOpen = () => { 
       dialogVisible.value = true;
     }
+    const handleDelete = () => {
+      root.confirmDelete({
+        content: "确认删除此信息？确认后将无法恢复！！"
+      });
+    }; 
+    const handleDeleteSelect = () => {
+      root.confirmDelete({
+        content: "确认删除选择的信息？确认后将无法恢复！！"
+      });
+    }
     /************************************
      * 返回
      */
     return {
-      typeOptions,
-      keywordOptions,
-      typeSelect,
-      keywordSelect,
-      dateValue,
-      dialogVisible,
-      keywordInput,
-      tableData,
-      handleSizeChange,
-      handleCurrentChange,
-      dialogOpen
+      // ref  
+      typeSelect, keywordSelect, dateValue, keywordInput, dialogVisible,
+      // reactive 
+      typeOptions, keywordOptions, tableData,
+      // methods
+      handleSizeChange, handleCurrentChange, dialogOpen, handleDelete, handleDeleteSelect
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 @import "styles/config.scss";
-.info-index-wrapper {
-  margin-left: 15px;
-  margin-right: 15px;
-  margin-top: 15px;
-}
 .item-wrap {
+  font-size: 12px;
   &.category {
-    @include labelDom(left, 50, 40, 110);
+    @include labelDom(left, 40, 40, 105);
   }
   &.date {
-    @include labelDom(right, 48, 40, 360);
+    @include labelDom(right, 44, 40, 310);
   }
   &.keyword {
     margin-left: 100px;
-    @include labelDom(right, 90, 40, 85);
+    @include labelDom(right, 50, 40, 80);
   }
-}
-.el-button.el-button--danger {
-  color: white;
-}
-.el-button.el-button--success {
-  color: white;
 }
 .add-button {
   position: fixed;

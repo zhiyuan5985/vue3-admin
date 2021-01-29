@@ -37,6 +37,9 @@ export default {
 .svg-icon {
   width: 1em;
   height: 1em;
+  &.font15 {
+    font-size: 15px;
+  }
   &.font22 {
     font-size: 24px;
   }

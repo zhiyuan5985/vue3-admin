@@ -7,9 +7,11 @@ import router from './router';
 import store from './store';
 import './icons/index.js';
 import './router/defend.js';
-
+import  globalMethods from "@/utils/globalMethods.js";
+// 全局注入
 Vue.use(ElementUI);
 Vue.use(VueCompositionApi);
+Vue.use(globalMethods);
 
 Vue.config.productionTip = false;
 

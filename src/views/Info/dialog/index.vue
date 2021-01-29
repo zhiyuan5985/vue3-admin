@@ -8,7 +8,7 @@
     <!-- form表单  start -->
     <el-form :model="form">
       <el-form-item label="类型：" :label-width="formLabelWidth">
-        <el-select style="width: 160px" v-model="form.region" placeholder="请选择">
+        <el-select style="width: 160px" v-m odel="form.region" placeholder="请选择">
           <el-option label="区域一" value="shanghai"></el-option>
           <el-option label="区域二" value="beijing"></el-option>
         </el-select>
