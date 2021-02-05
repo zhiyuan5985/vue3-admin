@@ -1,7 +1,7 @@
 <template>
-  <el-dialog title="新增" 
+  <el-dialog title="编辑" 
   :visible.sync="dialogVisable" 
-  :modal-append-to-body='false' 
+  :modal-append-to-body='false'  
   @close="handleClose"
   @open="handleOpen"
   style="text-align: left;"
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { addTableInfoApi } from '@/api/news';
+import { editInfoApi } from '@/api/news';
 import { reactive, ref, isRef, toRefs, onMounted, computed, watch, watchEffect } from '@vue/composition-api';
 export default {
   name: "DialogInfo",
@@ -46,6 +46,13 @@ export default {
     category: {
       type: Array,
       default: () => []
+    },
+    editId: {
+      type: String || Number
+    },
+    editData: {
+      type: Object,
+      default: () => {}
     }
   },
   setup(props, { emit, root, refs }) {
@@ -74,17 +81,30 @@ export default {
     };
     const handleOpen = () => {
       categoryData.item = props.category;
+      console.log(props.editData);
+      let categoryId = props.editData.categoryId;
+      let title = props.editData.title;
+      let content = props.editData.content;
+      form.type = toCategory(categoryId);
+      form.title = title;
+      form.content = content;
+    }
+    const toCategory = (categoryId) => {
+      let id = categoryId;
+      let target = props.category.filter(item => item.id == id)[0];
+      return target ? target.category_name : "";
     }
     const submit = () => {
       dialogVisable.value = false;
       let data = {
+        id: props.editId,
         categoryId: form.type,
         title: form.title,
         createDate: "2020-02-02 12:00:00",
         content: form.text
       }
       submitLoading.value = true; 
-      addTableInfoApi(data).then(res => {
+      editInfoApi(data).then(res => {
         root.$message({
           message: res.data.message,
           type: "success",
@@ -94,7 +114,7 @@ export default {
         form.type = '';
         form.title = '';
         form.text = ''; 
-        emit('addSucess');
+        emit('editSucess');
       })
     }
     /**
