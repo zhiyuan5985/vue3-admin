@@ -20,7 +20,7 @@
           </template>
           <!-- 子级菜单 -->
           <el-menu-item-group v-for="subItem in item.children" :key="subItem.id">
-            <el-menu-item :index="subItem.path">{{ subItem.meta.name }}</el-menu-item>
+            <el-menu-item :index="subItem.path" v-if="! subItem.hidden">{{ subItem.meta.name }}</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
       </template>

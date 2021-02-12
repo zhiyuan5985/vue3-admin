@@ -87,7 +87,7 @@
       <el-table-column prop="categoryId" label="类别" align="center" width="90" :formatter="toCategory"></el-table-column>
       <el-table-column prop="createDate" label="日期" align="center" width="180" :formatter="toDate"></el-table-column>
       <el-table-column prop="admin" label="管理员" align="center" width="90"></el-table-column>
-      <el-table-column prop="operation" label="操作" align="center" width="240">
+      <el-table-column prop="operation" label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -97,7 +97,11 @@
             size="mini"
             type="success"
             @click="handleEdit(scope.row)">编辑</el-button>
-        </template>
+          <!-- <router-link 
+          :to="{ name: 'infoDetail', params: {id: scope.row.id, title: scope.row.title}}" 
+          class="margin-left-10"> -->
+          <el-button size="mini" type="success" @click="handleDetail(scope.row.id, scope.row.title)">编辑详情</el-button>
+       </template>
       </el-table-column>
     </el-table>
     <!-- 表格  end -->
@@ -290,6 +294,17 @@ export default {
       editId.value = row.id;
       editData.item = row;
     };
+    const handleDetail = (infoId, infoTitle) => {
+      root.$store.commit('infoDetail/SET_ID', infoId);
+      root.$store.commit('infoDetail/SET_TITLE', infoTitle);
+      root.$router.push({ 
+        name: 'InfoDetail',
+        query: {
+          id: infoId, 
+          title: infoTitle
+        }
+      })
+    }
     /************************************
      * 生命周期
      */
@@ -310,7 +325,7 @@ export default {
       // reactive 
       typeOptions, keywordOptions, tableData, page, editData,
       // methods
-      handleSizeChange, handleCurrentChange, dialogOpen, handleDelete, handleDeleteSelect, getList, toDate, toCategory, handleSelectionChange, handleSearch, handleEdit
+      handleSizeChange, handleCurrentChange, dialogOpen, handleDelete, handleDeleteSelect, getList, toDate, toCategory, handleSelectionChange, handleSearch, handleEdit, handleDetail
     }
   }
 }

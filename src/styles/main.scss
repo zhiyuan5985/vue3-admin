@@ -10,5 +10,11 @@
 }
 
 .black-space-30 {
-    height: 30px
+    height: 30pxs
+}
+
+@for $i from 1 through 110 {
+    .margin-left-#{$i} {
+        margin-left: (1px * $i);
+    }
 }

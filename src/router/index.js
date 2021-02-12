@@ -75,6 +75,15 @@ const routes = [
         },
         component: () => import('../views/Info/Category.vue'),
       },
+      {
+        path: '/infoDetail ',
+        name: 'InfoDetail',
+        meta: {
+          name: '信息详情',
+        },
+        hidden: true,
+        component: () => import('../views/Info/InfoDetail.vue'),
+      },
     ],
   },
   /**
@@ -102,8 +111,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+  mode: 'hash',
   routes,
 });
 
