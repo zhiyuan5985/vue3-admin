@@ -14,7 +14,16 @@
       <el-input v-model="form.title"></el-input>
     </el-form-item>
     <el-form-item label="缩略图:">
-      缩略图
+      <el-upload
+        class="avatar-uploader"
+        action="http://upload-z1.qiniup.com"
+        :data="form.uploadKey"
+        :show-file-list="false"
+        :on-success="handleAvatarSuccess"
+        :before-upload="beforeAvatarUpload">
+        <img v-if="form.imageUrl" :src="form.imageUrl" class="avatar">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </el-upload>
     </el-form-item>
     <el-form-item label="发布日期:">
        <el-date-picker
@@ -38,6 +47,7 @@
 <script>
 import { reactive, ref, isRef, toRefs, onMounted, computed, watch } from '@vue/composition-api';
 import { common } from '@/api/common';
+import { qiniuTokenApi } from '@/api/common';
 import { getListApi, editInfoApi } from '@/api/news';
 import { timestampToTime } from '@/utils/timeStamp';
 // 引入富文本编辑器
@@ -66,7 +76,12 @@ export default {
       categoryId: "",
       title: root.$store.getters["infoDetail/infoTitle"],
       content: "",
-      dateTime: ""
+      dateTime: "",
+      imageUrl: "",
+      uploadKey: {
+        token: "",
+        key: ""
+      }
     });
     const typeOptions = reactive({
       category: [],
@@ -80,10 +95,12 @@ export default {
         categoryId: form.categoryId,
         title: form.title,
         createDate: form.dateTime,
-        content: form.content
+        content: form.content,
+        imgUrl: form.imageUrl
       }
       submitLoading.value = true; 
       editInfoApi(data).then(res => {
+        console.log(res);
         root.$message({
           message: res.data.message,
           type: "success",
@@ -109,14 +126,48 @@ export default {
         form.categoryId = resData.categoryId;
         form.content = resData.content;
         form.dateTime = timestampToTime(resData.createDate);
+        form.imageUrl = resData.imgUrl;
       })
     };
+    // 上传缩略图
+    const handleAvatarSuccess = (res, file) => {
+      form.imageUrl = `http://map.zhiyuan-space.top/${res.key}`;
+    };
+    // 缩略图预处理
+    const beforeAvatarUpload = (file) => {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        root.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        root.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      // 文件名转码
+      let suffix = file.name;
+      let key = encodeURI(`${suffix}`);
+      form.uploadKey.key = key;
+      return isJPG && isLt2M;
+    };
+    // 获取七牛云的token
+    const getQiniuToken = () => {
+      let requestData = {
+        ak: "oQI1tbDCNHQDVSSB11CVkreT8EHTrIcrnGHMVrzP",
+        sk: "KayIwV0CHIqSs1Nb6rlHTCRZone1-bezw3JJ9SyD",
+        buckety: "zhiyuan-space"
+      };
+      qiniuTokenApi(requestData).then(res => {
+        form.uploadKey.token = res.data.data.token;
+      })
+    }
     /**
      * 生命周期
      */
     onMounted(() => {
       getCategory();
       getList();
+      getQiniuToken();
     })
     watch(() => category.item, (cur) => {
       typeOptions.category = cur;
@@ -127,13 +178,36 @@ export default {
       // reactive
       form, typeOptions,
       // methods
-      onSubmit,
+      onSubmit, handleAvatarSuccess, beforeAvatarUpload
     }
   }
 }
 </script>
 <style scoped>
-* {
-  text-align: left;
-}
+  * {
+    text-align: left;
+  }
+  .avatar-uploader .el-upload {
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    border: 1px dashed #d9d9d9;
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 </style>
