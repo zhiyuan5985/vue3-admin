@@ -1,0 +1,26 @@
+.el-submenu .el-menu-item.is-active {
+    background-color: #f56c6c !important;
+}
+
+.el-submenu.is-active {
+    background-color: #f56c6c !important;
+}
+
+.el-menu {
+    border-right: none !important;
+}
+
+.el-dialog__body {
+    padding: 35px 45px !important;
+}
+
+.dialog-footer {
+    text-align: center;
+}
+
+.el-button.el-button--danger {
+    color: white;
+}
+.el-button.el-button--success {
+    color: white;
+}
