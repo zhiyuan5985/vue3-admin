@@ -45,14 +45,7 @@
         <div class="item-wrap keyword">
           <label for="">关键字：</label>
           <div class="content">
-            <el-select v-model="keywordSelect" style="width: 100%">
-              <el-option
-                v-for="item in keywordOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
+            <my-select :config="config"/>
           </div>
         </div>
       </el-col>
@@ -148,13 +141,15 @@ import { timestampToTime } from '@/utils/timeStamp';
 import { common } from '@/api/common';
 import DialogInfo from './dialog/index' ;
 import DialogInfoEdit from './dialog/edit';
+import mySelect from '@c/MySelect/index';
 import { reactive, ref, isRef, toRefs, onMounted, computed, watch } from '@vue/composition-api';
 import { getListApi, deleteInfoApi } from '@/api/news';
 export default {
   name:"infoIndex",
   components: {
     DialogInfo,
-    DialogInfoEdit
+    DialogInfoEdit,
+    mySelect
   },
   setup(props, {root}) {
     /**
@@ -195,6 +190,7 @@ export default {
       value: 'title',
       label: '标题'
     }]);
+    const config = reactive(['id','title']);
      // 表格数据
     const tableData =  reactive({
       item: []
@@ -323,7 +319,7 @@ export default {
       typeSelect, keywordSelect, dateValue, keywordInput, dialogVisible, total, loading, dialogEditVisible,
       editId,
       // reactive 
-      typeOptions, keywordOptions, tableData, page, editData,
+      typeOptions, keywordOptions, tableData, page, editData, config,
       // methods
       handleSizeChange, handleCurrentChange, dialogOpen, handleDelete, handleDeleteSelect, getList, toDate, toCategory, handleSelectionChange, handleSearch, handleEdit, handleDetail
     }
